@@ -1,2 +1,2 @@
 #!/usr/bin/env zsh
-DEBUG=1 DSK=foo ./run
+DEBUG=1 DJANGO_SECRET_KEY=foo ./run
