@@ -41,7 +41,7 @@ def webhook(request):
     try:    event_subtype= event['action']
     except: return HttpResponseBadRequest('Failed to identify event subtype')
 
-    if (event_type, event_subtype) not in (('issues', 'created'), ('issues', 'edited')):
+    if (event_type, event_subtype) not in (('issues', 'opened'), ('issues', 'edited')):
         return JsonResponse({
             'ignored': f'{event_type}.{event_subtype}'
         })

@@ -1,9 +1,4 @@
-send to OpenAI
 generate PR from result
-
-
-multiple instructions per issue
-
 ------------
 set up database
 set up payment gate
@@ -11,3 +6,6 @@ set up liberapay
 make homepage
 buy domain
 add sentry
+write readme
+
+announce on HN
