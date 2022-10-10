@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eu
+cd $(dirname $0)
+./.venv/bin/daphne  --bind 0.0.0.0 --port 8000 django_project.asgi:application
