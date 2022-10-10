@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class SebotConfig(AppConfig):
+class RobboatConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'sebot'
+    name = 'robboat'
