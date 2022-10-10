@@ -1,2 +1,2 @@
 #!/usr/bin/env zsh
-DEBUG=1 DJANGO_SECRET_KEY=foo ./run
+DAPHNE=.venv/bin/daphne DEBUG=1 DJANGO_SECRET_KEY=foo ./run

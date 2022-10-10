@@ -1,4 +1,3 @@
-resolve 403 still
 implement issue to code via HF
   https://github.com/CodedotAl/code-clippy-vscode/blob/master/src/utils/fetchCodeCompletions.ts
 set up database
