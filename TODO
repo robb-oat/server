@@ -1,5 +1,6 @@
-implement issue to code via HF
+implement issue to code via OpenAI
   https://github.com/CodedotAl/code-clippy-vscode/blob/master/src/utils/fetchCodeCompletions.ts
+------------
 set up database
 set up payment gate
 set up liberapay

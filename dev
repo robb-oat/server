@@ -1,2 +1,4 @@
 #!/usr/bin/env zsh
-DAPHNE=.venv/bin/daphne DEBUG=1 DJANGO_SECRET_KEY=foo ./run
+cd $(dirname $0)
+export $(cat dev.env local.env | xargs)
+.venv/bin/python manage.py runserver
