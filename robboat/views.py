@@ -25,8 +25,7 @@ def webhook(request):
     lines = body.splitlines()
     if len(lines) < 3:
         return HttpResponseBadRequest('Too few lines')
-    filespec = lines.pop()
-    lines.pop()
+    filespec = lines[0]
     instruction = '\n'.join(lines)
     return HttpResponse(f'''
     Greetings, GitHub!<br><br>

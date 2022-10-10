@@ -1,5 +1,9 @@
-implement issue to code via OpenAI
-  https://github.com/CodedotAl/code-clippy-vscode/blob/master/src/utils/fetchCodeCompletions.ts
+send to OpenAI
+generate PR from result
+
+
+multiple instructions per issue
+
 ------------
 set up database
 set up payment gate
