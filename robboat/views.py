@@ -64,7 +64,7 @@ def webhook(request):
     sha, filepath, start, end = filespec.groups()
     start, end = map(int, (start, end))
     instruction = '\n'.join(all_lines[2:])
-    if not instruction.startswith('robb-oat')):
+    if not instruction.startswith('robb-oat'):
         return JsonResponse({
             'ignored': 'not mentioned'
         })
