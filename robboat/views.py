@@ -61,7 +61,7 @@ def webhook(request):
         return HttpResponseBadRequest('Malformed filespec')
     sha, filepath, start, end = filespec.groups()
     start, end = map(int, (start, end))
-    # Ignore if we're not mentioned
+    instruction = '\n'.join(all_lines[2:])
     if not (instruction.startswith('@probably-robboat') or instruction.startswith('robboat')):
         return JsonResponse({
             'ignored': 'not mentioned'
