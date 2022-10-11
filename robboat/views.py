@@ -40,7 +40,6 @@ def webhook(request):
     except: return HttpResponseBadRequest('Failed to identify repository')
     try:    event_subtype= event['action']
     except: return HttpResponseBadRequest('Failed to identify event subtype')
-
     if (event_type, event_subtype) not in (('issues', 'opened'), ('issues', 'edited')):
         return JsonResponse({
             'ignored': f'{event_type}.{event_subtype}'
@@ -63,6 +62,10 @@ def webhook(request):
     sha, filepath, start, end = filespec.groups()
     start, end = map(int, (start, end))
     instruction = '\n'.join(all_lines[2:])
+    if not (instruction.startswith('@probably-robboat') or instruction.startswith('robboat')):
+        return JsonResponse({
+            'ignored': 'not mentioned'
+        })
 
     content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
     content_lines = httpx.get(content_url).text.splitlines()
