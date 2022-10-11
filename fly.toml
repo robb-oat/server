@@ -4,7 +4,7 @@ kill_timeout = 5
 processes = []
 
 [deploy]
-  release_command = "python manage.py migrate --noinput"
+  release_command = "python manage.py migrate --noinput && python manage.py collectstatic"
 
 [env]
   PORT = "8000"

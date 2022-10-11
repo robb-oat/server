@@ -6,3 +6,4 @@ httpx==0.23.0
 openai==0.23.1
 pygithub==1.55
 sqlparse==0.4.3
+whitenoise==6.2.0
