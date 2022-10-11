@@ -40,7 +40,6 @@ def webhook(request):
     except: return HttpResponseBadRequest('Failed to identify repository')
     try:    event_subtype= event['action']
     except: return HttpResponseBadRequest('Failed to identify event subtype')
-
     if (event_type, event_subtype) not in (('issues', 'opened'), ('issues', 'edited')):
         return JsonResponse({
             'ignored': f'{event_type}.{event_subtype}'
@@ -55,14 +54,19 @@ def webhook(request):
     body = event['issue']['body'] or ''  # body can be None
     issue_number = event['issue']['number']
     all_lines = body.splitlines()
-    if len(all_lines) < 3:
+    if len(all_lines) < 2:
+    instruction = '\n'.join(all_lines[1:])
         return HttpResponseBadRequest('Too few lines')
     filespec = filespec_re.match(all_lines[0])
     if filespec is None:
         return HttpResponseBadRequest('Malformed filespec')
     sha, filepath, start, end = filespec.groups()
     start, end = map(int, (start, end))
-    instruction = '\n'.join(all_lines[2:])
+    # Ignore if we're not mentioned
+    if not (instruction.startswith('@probably-robboat') or instruction.startswith('robboat')):
+        return JsonResponse({
+            'ignored': 'not mentioned'
+        })
 
     content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
     content_lines = httpx.get(content_url).text.splitlines()
