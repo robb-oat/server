@@ -5,9 +5,11 @@ import os
 import httpx
 import openai
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
 from github_bot_api import GithubApp
 from github.InputGitTreeElement import InputGitTreeElement
+
 
 openai.organization = os.environ['OPENAI_ORG_ID']
 openai.api_key = os.environ['OPENAI_API_KEY']
@@ -25,7 +27,7 @@ github_app = GithubApp(
 
 filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)-L(?P<end>\d+)')
 def homepage(request):
-    return HttpResponse('Greetings, friend! 😄')
+    return TemplateResponse(request, 'homepage.html')
 
 @csrf_exempt
 def webhook(request):

@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+div {
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 0 0 40pt;
+}
+h1 img {
+  display: block;
+  width: 80%;
+  margin: 40pt auto;
+}
+h2 {
+  margin: 24pt 0 12pt;
+}
+p {
+  padding: 0 0 12pt;
+  line-height: 120%;
+}
+p.cta {
+  text-align: right;
+  font-weight: bold;
+}
+img {
+  max-width: 100%;
+}
