@@ -1,5 +1,3 @@
-generate PR from result
-------------
 set up database
 set up payment gate
 set up liberapay
@@ -7,5 +5,4 @@ make homepage
 buy domain
 add sentry
 write readme
-
 announce on HN
