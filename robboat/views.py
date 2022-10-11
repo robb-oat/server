@@ -16,7 +16,17 @@ github_app_private_key = f'''\
 -----BEGIN RSA PRIVATE KEY-----
 {os.environ['GITHUB_APP_PRIVATE_KEY']}
 -----END RSA PRIVATE KEY-----
-'''
+'''import os
+import json
+import requests
+import re
+from github import Github as GithubApp
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.safestring import mark_safe
+from jinja2 import Template
+
 github_app = GithubApp(
   user_agent='robboat',
   app_id=int(os.environ['GITHUB_APP_ID']),
