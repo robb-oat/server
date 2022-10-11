@@ -25,7 +25,6 @@ github_app = GithubApp(
 
 filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)-L(?P<end>\d+)')
 
-
 def homepage(request):
     return render(request, 'homepage.html')
 
