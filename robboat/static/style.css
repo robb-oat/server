@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
 }
+body {
+  background: #EDEFF3;
+}
 div {
   max-width: 320px;
   margin: 0 auto;
@@ -23,6 +26,8 @@ p.cta {
   text-align: right;
   font-weight: bold;
 }
-img {
+p img {
   max-width: 100%;
+  border: 1px solid #141415;
+  border-radius: 5px;
 }
