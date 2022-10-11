@@ -7,6 +7,7 @@ import openai
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from github_bot_api import GithubApp
+from github.InputGitTreeElement import InputGitTreeElement
 
 openai.organization = os.environ['OPENAI_ORG_ID']
 openai.api_key = os.environ['OPENAI_API_KEY']
@@ -53,50 +54,42 @@ def webhook(request):
         return HttpResponseBadRequest('Malformed POST body - no issue body')
     body = event['issue']['body'] or ''  # body can be None
     issue_number = event['issue']['number']
-    lines = body.splitlines()
-    if len(lines) < 3:
+    all_lines = body.splitlines()
+    if len(all_lines) < 3:
         return HttpResponseBadRequest('Too few lines')
-    filespec = filespec_re.match(lines[0])
+    filespec = filespec_re.match(all_lines[0])
     if filespec is None:
         return HttpResponseBadRequest('Malformed filespec')
     sha, filepath, start, end = filespec.groups()
     start, end = map(int, (start, end))
+    instruction = '\n'.join(all_lines[2:])
 
-    code_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
-    old_code = '\n'.join(httpx.get(code_url).text.splitlines()[start-1:end])
-    instruction = '\n'.join(lines)
-    answer = openai.Edit.create(model='code-davinci-edit-001', input=old_code, instruction=instruction)
-    new_code = answer['choices'][0]['text']
+    content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
+    content_lines = httpx.get(content_url).text.splitlines()
+    before = '\n'.join(content_lines[:start-1])
+    old_passage = '\n'.join(content_lines[start-1:end])
+    after = '\n'.join(content_lines[end:])
+    answer = openai.Edit.create(model='code-davinci-edit-001', input=old_passage, instruction=instruction)
+    new_passage = answer['choices'][0]['text']
+    new_content = before + new_passage + after
 
     repo = github_app.installation_client(installation_id).get_repo(org_repo)
-    issue = repo.get_issue(issue_number).create_comment(f'''
-Okay! 👍
 
-----
+    branch = f'issue-{issue_number}'
+    old_commit = repo.get_git_commit(sha)
+    new_tree = repo.create_git_tree(
+        [InputGitTreeElement(filepath, '100644', 'blob', new_content)],
+        old_commit.tree,
+    )
+    new_commit = repo.create_git_commit('robbocommit', new_tree, [old_commit])
+    ref = repo.create_git_ref(f'refs/heads/{branch}', new_commit.sha)
+    pr = repo.create_pull(
+        title=f'Address #{issue_number}',
+        body=f"How's this? Closes #{issue_number}",
+        base='main',
+        head=branch,
+    )
 
-{filespec.groups()}
-
-----
-
-{instruction}
-
-----
-
-```python
-{old_code}
-```
-
-----
-
-```python
-{new_code}
-```
-''')
-#    pr = repo.create_pull(
-#        title=instructions.splitlines()[0][:50]
-#        body='Closes #',
-#    )
-#
     return JsonResponse({
         'filespec': filespec.groups(),
         'instruction': instruction,
