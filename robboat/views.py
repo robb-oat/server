@@ -26,7 +26,6 @@ github_app = GithubApp(
 filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)-L(?P<end>\d+)')
 def homepage(request):
     return HttpResponse('Greetings, friend! 😄')
-
 @csrf_exempt
 def webhook(request):
 
@@ -64,7 +63,25 @@ def webhook(request):
     start, end = map(int, (start, end))
     instruction = '\n'.join(all_lines[2:])
 
-    content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
+
+    pr = request_pull(org_repo, sha, filepath, start, end, instruction, issue_number, installiation_id)
+
+    return JsonResponse(dict(
+        filespec=filespec.groups(),
+        instruction=instruction,
+        pull_request=pr.as_dict(),
+    ))
+    
+
+def request_pull(org_repo, sha, filepath, start, end, instruction, issue_number):
+
+    client = github_client(org_repo, installation_id)
+    repo = client.get_repo(org_repo)
+
+    if filepath[:6] == 'README':
+        return HttpResponseBadRequest('Editing READMEs is hard')
+
+    content_url = 'https://raw.githubusercontent.com/{}/{}/{}'.format(org_repo, sha, filepath)
     content_lines = httpx.get(content_url).text.splitlines()
     before = '\n'.join(content_lines[:start-1])
     old_passage = '\n'.join(content_lines[start-1:end])
