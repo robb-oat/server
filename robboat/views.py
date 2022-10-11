@@ -54,7 +54,7 @@ def webhook(request):
     body = event['issue']['body'] or ''  # body can be None
     issue_number = event['issue']['number']
     all_lines = body.splitlines()
-if len(all_lines) < 3:
+    if len(all_lines) < 3:
         return HttpResponseBadRequest('Too few lines')
     filespec = filespec_re.match(all_lines[0])
     if filespec is None:
