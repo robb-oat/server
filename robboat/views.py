@@ -46,7 +46,6 @@ def webhook(request):
         return JsonResponse({
             'ignored': f'{event_type}.{event_subtype}'
         })
-
     if 'issue' not in event:
         return HttpResponseBadRequest('Malformed POST body - no issue')
     if 'number' not in event['issue']:
@@ -65,9 +64,7 @@ def webhook(request):
     start, end = map(int, (start, end))
     instruction = '\n'.join(all_lines[2:])
     if not instruction.startswith('robb-oat'):
-        return JsonResponse({
-            'ignored': 'not mentioned'
-        })
+        return HttpResponseBadRequest('No instruction')
 
     content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
     content_lines = httpx.get(content_url).text.splitlines()
