@@ -26,8 +26,15 @@ github_app = GithubApp(
 )
 
 filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)-L(?P<end>\d+)')
+
+
 def homepage(request):
     return TemplateResponse(request, 'homepage.html')
+
+
+def privacy(request):
+    return TemplateResponse(request, 'privacy.html')
+
 
 @csrf_exempt
 def webhook(request):
