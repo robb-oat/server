@@ -25,7 +25,7 @@ github_app = GithubApp(
   private_key=github_app_private_key,
 )
 
-filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)-L(?P<end>\d+)')
+filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#?L(?P<start>\d+)-?L?(?P<end>\d+)?')
 def homepage(request):
     return TemplateResponse(request, 'homepage.html')
 
@@ -60,10 +60,18 @@ def webhook(request):
         return HttpResponseBadRequest('Too few lines')
     filespec = filespec_re.match(all_lines[0])
     if filespec is None:
-        return HttpResponseBadRequest('Malformed filespec')
+        # Single-line?
+        filespec = filespec_re.match(all_lines[1])
+        if filespec is None:
+            return HttpResponseBadRequest('Malformed filespec')
+        sha, filepath, start, end = filespec.groups()
+        start, end = map(int, (start, start))
+        instruction = '\n'.join(all_lines[1:])
+    else:
+        start, end = map(int, (start, end))
+        instruction = '\n'.join(all_lines[2:])
+
     sha, filepath, start, end = filespec.groups()
-    start, end = map(int, (start, end))
-    instruction = '\n'.join(all_lines[2:])
     if not instruction.startswith('robb-oat'):
         return JsonResponse({
             'ignored': 'not mentioned'
