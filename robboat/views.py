@@ -40,6 +40,28 @@ def webhook(request):
     except: return HttpResponseBadRequest('Failed to identify repository')
     try:    event_subtype= event['action']
     except: return HttpResponseBadRequest('Failed to identify event subtype')
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.conf.settings import OPENAI_API_SECRET
+from file.models import Repository
+import re
+import httpx
+
+
+@require_POST
+@csrf_exempt
+def github_webhook(request, org_repo):
+    repository = Repository.get_or_error(org_repo)
+    if request.META['HTTP_X_GITHUB_EVENT'] != 'issues':
+        return JsonResponse({
+            'ignored': f'{request.META["HTTP_X_GITHUB_EVENT"]}.{request.META["HTTP_X_GITHUB_EVENT"]}'
+        })
+    # print(request.body)
+    event = json.loads(request.body)
+    event_type = request.META['HTTP_X_GITHUB_EVENT']
+    event_subtype = request.META.get('HTTP_X_GITHUB_EVENT')
+    print(event_type, event_subtype)
 
     if (event_type, event_subtype) not in (('issues', 'opened'), ('issues', 'edited')):
         return JsonResponse({
