@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # before application configs
+    'raven.contrib.django.raven_compat',
+    # after application configs
     'robboat.apps.RobbOatConfig',
 ]
 
@@ -126,3 +129,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Sentry
+# https://docs.sentry.io/error-reporting/quickstart/?platform=python#configure-the-dsn
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
+RAVEN_CONFIG = {
+    'dsn': SENTRY_DSN,
+# https://docs.sentry.io/error-reporting/quickstart/?platform=python#optional-settings
+#    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+#    'send_default_pii': True,
+}
