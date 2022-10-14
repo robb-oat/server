@@ -68,6 +68,7 @@ def webhook(request):
     if filespec is None:
         return HttpResponseBadRequest('Malformed filespec')
     sha, filepath, start, *maybe_end = filespec.groups()
+    print(sha, filespath, start, maybe_end)
     if len(maybe_end) == 0:
         start = int(start)
         end = start+1
