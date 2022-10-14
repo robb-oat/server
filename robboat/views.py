@@ -25,7 +25,7 @@ github_app = GithubApp(
   private_key=github_app_private_key,
 )
 
-filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)-L(?P<end>\d+)')
+filespec_re = re.compile(r'https://github.com/[^/]+/[^/]+/blob/(?P<sha>[^/]+)/(?P<filepath>[^#]+)#L(?P<start>\d+)(?:-L(?P<end>\d+))?')
 
 
 def homepage(request):
@@ -67,8 +67,12 @@ def webhook(request):
     filespec = filespec_re.match(all_lines[0])
     if filespec is None:
         return HttpResponseBadRequest('Malformed filespec')
-    sha, filepath, start, end = filespec.groups()
-    start, end = map(int, (start, end))
+    sha, filepath, start, *maybe_end = filespec.groups()
+    if len(maybe_end) == 0:
+        start = int(start)
+        end = start+1
+    else:
+        start, end = map(int, (start, maybe_end[0]))
     instruction = '\n'.join(all_lines[2:])
 
     content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
