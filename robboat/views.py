@@ -67,13 +67,12 @@ def webhook(request):
     filespec = filespec_re.match(all_lines[0])
     if filespec is None:
         return HttpResponseBadRequest('Malformed filespec')
-    sha, filepath, start, *maybe_end = filespec.groups()
-    print(sha, filespath, start, maybe_end)
-    if len(maybe_end) == 0:
+    sha, filepath, start, maybe_end = filespec.groups()
+    if maybe_end is None:
         start = int(start)
         end = start+1
     else:
-        start, end = map(int, (start, maybe_end[0]))
+        start, end = map(int, (start, maybe_end))
     instruction = '\n'.join(all_lines[2:])
 
     content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
