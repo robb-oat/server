@@ -16,7 +16,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+default_dsn = "https://bebe68bcd84841ed9a7b490a62e9eaa5@o194877.ingest.sentry.io/5411613"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -121,6 +121,16 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# See https://docs.sentry.io/platforms/python/django/
+
+import sentry_sdk
+sentry_sdk.init(
+    dsn=os.environ.get('DJANGO_SENTRY_DSN', default_dsn),
+    integrations=[
+        django.DjangoIntegration()
+    ]
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
