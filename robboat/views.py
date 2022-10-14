@@ -62,14 +62,24 @@ def webhook(request):
     body = event['issue']['body'] or ''  # body can be None
     issue_number = event['issue']['number']
     all_lines = body.splitlines()
-    if len(all_lines) < 3:
-        return HttpResponseBadRequest('Too few lines')
-    filespec = filespec_re.match(all_lines[0])
-    if filespec is None:
+    if len(all_lines) == 1:
+        filespec = filespec_re.match(body)
+        if filespec is None:
+            return HttpResponseBadRequest('Malformed one-line filespec')
+        sha, filepath, start, end = filespec.groups()
+        start, end = map(int, (start, end))
+        instruction = ''
+    elif len(all_lines) == 2:
+        filespec = filespec_re.match(all_lines[0])
+        if filespec is None:
+            return HttpResponseBadRequest('Malformed filespec')
+        sha, filepath, start, end = filespec.groups()
+        start, end = map(int, (start, end))
+        instruction = all_lines[1]
+    else:
+        filespec = filespec_re.match(all_lines[0])
         return HttpResponseBadRequest('Malformed filespec')
-    sha, filepath, start, end = filespec.groups()
-    start, end = map(int, (start, end))
-    instruction = '\n'.join(all_lines[2:])
+        instruction = '\n'.join(all_lines[2:])
 
     content_url = f'https://raw.githubusercontent.com/{org_repo}/{sha}/{filepath}'
     content_lines = httpx.get(content_url).text.splitlines()
