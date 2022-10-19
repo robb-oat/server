@@ -11,15 +11,21 @@
 
   <p><a href="https://github.com/robb-oat/server/issues/2">Preview Robbʼs work</a>. ☝️</p>
 
-  <p class="cta">👉 <a href="https://github.com/marketplace/robb-oat">“Hire” Robb for free</a>!</p>
+  <p class="cta">👉 <a href="https://github.com/apps/robb-oat">“Hire” Robb for free</a>!</p>
+
+  <h2>User Instructions</h2>
+
+  <p>Robb Oat tries to fix every GitHub Issue it understands. <a href="https://github.com/apps/robb-oat">Install the app</a> in your repo, then create issues with the form:
+
+  <pre>https://github.com/${org}/${repo}/blob/${sha}/${path}#L0-L10
+
+Change this code in this way.</pre>
+
+  <p>That is <a href="https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-a-permanent-link-to-a-code-snippet">a permanent link to a code snippet</a> followed by a natural language instruction for changing that code snippet (separated by a blank line). Once you create the issue, Robb Oat should open a PR with an attempted fix in less than a minute. Runnng into trouble? <a href="https://github.com/robb-oat/server/issues/new">Let us know</a>.</p>
+
+  <p>Think of Robb Oat as a very new software engineer. It can complete basic tasks, but even then youʼll often have to modify the PR before being able to land it. Maybe it will improve!</p>
 
   <h2>FAQ</h2>
-
-  <p><b>What model does Robb Oat use?</b> Robb uses the <a
-    href="https://beta.openai.com/docs/models/codex-series-private-beta">Davinci
-    model from OpenAI Codex</a>.</p>
-
-  <p><b>Whatʼs with the name?</b> Dunno, <a href="{% static 'variations.png' %}">ask DALL&middot;E</a>.</p>
 
   <p><b>Where do I complain?</b> <a
       href="https://twitter.com/HeyRobbOat">Twitter</a> or <a href="mailto:hey@robboat.com">email</a>.</p>
@@ -31,4 +37,11 @@
 
   <p><b>Are you dogfooding?</b> <a
       href="https://github.com/robb-oat/server/pulls?q=is%3Apr+is%3Amerged+author%3Aapp%2Frobb-oat">Yes</a>.</p>
+
+  <p><b>Whatʼs with the name?</b> Dunno, <a href="{% static 'variations.png' %}">ask DALL&middot;E</a>.</p>
+
+  <p><b>What model does Robb Oat use?</b> Robb uses the <a
+    href="https://beta.openai.com/docs/models/codex-series-private-beta">Davinci
+    model from OpenAI Codex</a>.</p>
+
 {% endblock %}

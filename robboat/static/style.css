@@ -31,3 +31,11 @@ p img {
   border: 1px solid #141415;
   border-radius: 5px;
 }
+pre {
+  background: #141415;
+  color: #45f542;
+  width: 100%;
+  overflow: auto;
+  margin: 0 0 12pt;
+  padding: 6pt;
+}
