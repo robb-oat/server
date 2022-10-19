@@ -5,5 +5,6 @@ github-bot-api==0.5.1
 httpx==0.23.0
 openai==0.23.1
 pygithub==1.55
+sentry-sdk==1.9.10
 sqlparse==0.4.3
 whitenoise==6.2.0
