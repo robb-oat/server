@@ -120,15 +120,14 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# See https://docs.sentry.io/platforms/python/django/
 
-import sentry_sdk
+# See https://docs.sentry.io/platforms/python/django/
 if 'DJANGO_SENTRY_DSN' in os.environ:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
     sentry_sdk.init(
         dsn=os.environ['DJANGO_SENTRY_DSN'],
-        integrations=[
-            django.DjangoIntegration()
-        ]
+        integrations=[DjangoIntegration()],
     )
 
 # Default primary key field type

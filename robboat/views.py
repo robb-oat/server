@@ -36,6 +36,10 @@ def privacy(request):
     return TemplateResponse(request, 'privacy.html')
 
 
+def error(request):
+    raise heck
+
+
 @csrf_exempt
 def webhook(request):
 
