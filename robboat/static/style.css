@@ -6,14 +6,14 @@ body {
   background: #EDEFF3;
 }
 div {
-  max-width: 320px;
+  max-width: 320pt;
   margin: 0 auto;
-  padding: 0 0 40pt;
+  padding: 0;
 }
 h1 img {
   display: block;
   width: 80%;
-  margin: 40pt auto;
+  margin: 36pt auto;
 }
 h2 {
   margin: 24pt 0 12pt;
@@ -28,8 +28,8 @@ p.cta {
 }
 p img {
   max-width: 100%;
-  border: 1px solid #141415;
-  border-radius: 5px;
+  border: 1pt solid #141415;
+  border-radius: 5pt;
 }
 pre {
   background: #141415;
@@ -38,4 +38,11 @@ pre {
   overflow: auto;
   margin: 0 0 12pt;
   padding: 6pt;
+}
+footer {
+  border-top: 1pt solid #141415;
+  padding: 24pt 0 0;
+  margin: 24pt 0;
+  text-align: center;
+  font-size: 10pt;
 }
