@@ -8,7 +8,7 @@ body {
 div {
   max-width: 320pt;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 24pt;
 }
 h1 img {
   display: block;
