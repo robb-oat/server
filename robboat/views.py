@@ -39,11 +39,10 @@ def privacy(request):
 def error(request):
     raise heck
 
-
 @csrf_exempt
 def webhook(request):
 
-    try:    event_type = request.headers['X-GitHub-Event']
+    try:    issue_event = issue_event_re.match(request.headers['X-GitHub-Event'])
     except: return HttpResponseBadRequest('Failed to identify event type')
     try:    event = json.loads(request.body)
     except: return HttpResponseBadRequest('Failed to parse request body as JSON')
@@ -51,7 +50,7 @@ def webhook(request):
     except: return HttpResponseBadRequest('Failed to identify installation')
     try:    org_repo = event['repository']['full_name']
     except: return HttpResponseBadRequest('Failed to identify repository')
-    try:    event_subtype= event['action']
+    try:    event_type, event_subtype = issue_event.groups()
     except: return HttpResponseBadRequest('Failed to identify event subtype')
     if (event_type, event_subtype) not in (('issues', 'opened'), ('issues', 'edited')):
         return JsonResponse({
