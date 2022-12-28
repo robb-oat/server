@@ -62,12 +62,10 @@ To run locally:
 ./dev
 ```
 
-Install a smee client such as [gosmee](https://github.com/chmouel/gosmee):
+Install the [smee client](https://github.com/probot/smee-client) and start it like so:
 
 ```
-brew tap chmouel/gosmee https://github.com/chmouel/gosmee
-brew install gosmee
-gosmee <webhook URL> https://localhost:8000
+$ smee --url https://smee.io/deadbeef --port 8000 --path /webhook
 ```
 
 # Usage
