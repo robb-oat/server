@@ -42,7 +42,28 @@ OPENAI_ORG_ID=<see above>
 OPENAI_API_KEY=<see above>
 GITHUB_APP_ID=<see above>
 GITHUB_APP_PRIVATE_KEY=<see above> # fold to one line, and don't include the '---- BEGIN/END ----'
+GITHUB_BOT_USER_ID=<see below>
 ```
+
+Here's what's up with the bot user ID. GitHub automatically provisions a bot
+user account to act on behalf of your app. We want to constrain some of our
+activity based on whether the bot is involved. For example, we only want the
+bot to respond to reviews on its own pull requests. We have to subscribe to
+_all_ pull request review comment events for the repo, so we need to filter
+down to only comments on the bot's own PRs. There are some potential ways to
+make this determination dynamically, but they feel brittle enough and the
+stakes are high enough (it would suck if Robb Oat pushed commits for _every_
+pull request comment in a busy repo) that we ask you to set this value
+explicitly. You can find it by visiting:
+
+https://api.github.com/users/your-app-slug[bot]
+
+That's `your-app-slug` plus `[bot]`. Here is the link for the production Robb
+Oat bot user to illustrate:
+
+https://api.github.com/users/robb-oat[bot]
+
+Grab the "id" from there and set it for `GITHUB_BOT_USER_ID`.
 
 Optional config in `local.env`:
 
