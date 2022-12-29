@@ -115,34 +115,63 @@ def handle_issues_opened(repo, event):
     else:
         start, end = map(int, (start, maybe_end))
     instruction = '\n'.join(all_lines[2:])
+    branch = f'issue-{issue_number}'
 
+    new_commit, response = edit(repo, branch, sha, filepath, start, end, instruction)
+
+    repo.create_git_ref(f'refs/heads/{branch}', new_commit.sha)
+    repo.create_pull(
+        title=f'Address #{issue_number}',
+        body=f"How's this? Closes #{issue_number}",
+        base='main',
+        head=branch,
+    )
+    return response
+
+handle_issues_edited = handle_issues_opened
+
+
+def handle_pull_request_review_comment_created(repo, event):
+    comment = event['comment']
+    instruction = comment['body']
+    filepath = comment['path']
+    sha = comment['commit_id'] # github.com/orgs/community/discussions/24449 tho
+    start = int(comment['start_line'])
+    end = int(comment['line'])
+    branch = event['pull_request']['head']['ref']
+
+    new_commit, response = edit(repo, branch, sha, filepath, start, end, instruction)
+
+    repo.get_git_ref(f'heads/{branch}').edit(new_commit.sha)
+    return response
+
+
+def edit(repo, branch, sha, filepath, start, end, instruction):
     content_url = f'https://raw.githubusercontent.com/{repo.full_name}/{sha}/{filepath}'
     content_lines = httpx.get(content_url).text.splitlines()
     before = '\n'.join(content_lines[:start-1])
     old_passage = '\n'.join(content_lines[start-1:end])
     after = '\n'.join(content_lines[end:])
-    answer = openai.Edit.create(model='code-davinci-edit-001', input=old_passage, instruction=instruction)
+    answer = openai.Edit.create(
+                model='code-davinci-edit-001',
+                input=old_passage,
+                instruction=instruction)
     new_passage = answer['choices'][0]['text']
     new_content = before + new_passage + after
 
-    branch = f'issue-{issue_number}'
+    # push
     old_commit = repo.get_git_commit(sha)
     new_tree = repo.create_git_tree(
         [InputGitTreeElement(filepath, '100644', 'blob', new_content)],
         old_commit.tree,
     )
     new_commit = repo.create_git_commit('robbocommit', new_tree, [old_commit])
-    ref = repo.create_git_ref(f'refs/heads/{branch}', new_commit.sha)
-    pr = repo.create_pull(
-        title=f'Address #{issue_number}',
-        body=f"How's this? Closes #{issue_number}",
-        base='main',
-        head=branch,
-    )
 
-    return JsonResponse({
-        'filespec': filespec.groups(),
+    response = JsonResponse({
+        'sha': sha,
+        'filepath': filepath,
+        'start': start,
+        'end': end,
         'instruction': instruction,
     })
-
-handle_issues_edited = handle_issues_opened
+    return new_commit, response
