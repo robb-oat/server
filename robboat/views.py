@@ -137,7 +137,7 @@ def edit(repo, branch, sha, filepath, start, end, instruction):
     old_passage = '\n'.join(content_lines[start-1:end])
     after = '\n'.join(content_lines[end:])
     answer = openai.Edit.create(
-                model='code-davinci-edit-001',
+                model='gpt-3.5-turbo',
                 input=old_passage,
                 instruction=instruction)
     new_passage = answer['choices'][0]['text']
