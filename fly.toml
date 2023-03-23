@@ -1,6 +1,7 @@
-app = "robboat"
+app = "robboat-staging"
 kill_signal = "SIGINT"
 kill_timeout = 5
+primary_region = "sjc"
 processes = []
 
 [deploy]
@@ -40,5 +41,5 @@ processes = []
     timeout = "2s"
 
 [[statics]]
-  guest_path = "/app/public"
+  guest_path = "/code/static"
   url_prefix = "/static/"

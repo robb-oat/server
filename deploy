@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+target="$1"
+if [ "$target" = "staging" ]; then
+  env="-staging"
+elif [ "$target" = "prod" ]; then
+  env=""
+else
+  echo "Unknown target: '$1'. Either staging or prod, please."
+  exit 1
+fi
+
+flyctl deploy --app=robboat$env
